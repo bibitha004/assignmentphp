@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+        .quiz-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-bottom: 20px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #d0d0d0;
+        }
+        .result {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Quiz Game</h2>
+        <p class="question" id="question"></p>
+        <div class="options" id="options"></div>
+        <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question</button>
+        <p class="result" id="resultMessage"></p>
+    </div>
+
+    <script>
+        const quizQuestions = [
+            {
+                question: "What is the capital of India?",
+                options: ["Paris", "New Delhi", "Berlin", "Madrid"],
+                correct: "New Delhi"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                correct: "Mars"
+            },
+            {
+                question: "What is the largest continent?",
+                options: ["Asia", "Antartica", "Australia"],
+                correct: "Asia"
+            },
+            {
+                question: "Who wrote 'To Kill a Mockingbird'?",
+                options: ["Harper Lee", "J.K. Rowling", "F. Scott Fitzgerald", "Ernest Hemingway"],
+                correct: "Harper Lee"
+            },
+            {
+                question: "Which element has the chemical symbol O?",
+                options: ["Oxygen", "Osmium", "Opium", "Ozone"],
+                correct: "Oxygen"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            document.getElementById('question').innerText = currentQuestion.question;
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';  // Clear previous options
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.classList.add('option');
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            if (selectedOption === currentQuestion.correct) {
+                score++;
+            }
+
+            const resultMessage = document.getElementById('resultMessage');
+            resultMessage.innerText = selectedOption === currentQuestion.correct ? "Correct!" : "Wrong!";
+
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                loadQuestion();
+                document.getElementById('resultMessage').innerText = '';
+                document.getElementById('nextBtn').classList.add('hidden');
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function showFinalScore() {
+            document.getElementById('resultMessage').innerText = Game Over! Your score is ${score} out of ${quizQuestions.length}.;
+            document.getElementById('nextBtn').classList.add('hidden');
+        }
+
+        loadQuestion();  // Load the first question
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .game {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 1em;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game">
+        <h2>Guess the Number</h2>
+        <p>Guess a number between 1 and 100. You have <span id="attemptsLeft">10</span> attempts remaining.</p>
+        <input type="number" id="guess" placeholder="Enter your guess" disabled>
+        <button id="checkBtn" onclick="checkGuess()">Check Guess</button>
+        <p id="message"></p>
+        <button id="resetBtn" class="hidden" onclick="resetGame()">Play Again</button>
+    </div>
+
+    <script>
+        let randomNumber;
+        let attempts;
+        let gameOver = false;
+
+        function startGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;  // Generates a number between 1 and 100
+            attempts = 10;  // Set attempts limit to 10
+            gameOver = false;
+
+            document.getElementById('message').innerText = '';
+            document.getElementById('guess').disabled = false;
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('resetBtn').classList.add('hidden');  // Hide "Play Again" button
+            document.getElementById('attemptsLeft').innerText = attempts;  // Reset attempts display
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            if (isNaN(guess)) {
+                document.getElementById('message').innerText = 'Please enter a valid number!';
+                return;
+            }
+
+            if (guess === randomNumber) {
+                document.getElementById('message').innerText = 'You guessed it right!';
+                gameOver = true;
+                endGame();
+            } else if (attempts > 1) {
+                attempts--;
+                document.getElementById('attemptsLeft').innerText = attempts;
+                document.getElementById('message').innerText = guess < randomNumber ? 'Too low!' : 'Too high!';
+            } else {
+                document.getElementById('message').innerText = 'Game over!';
+                gameOver = true;
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('guess').disabled = true;
+            document.getElementById('checkBtn').disabled = true;
+            document.getElementById('resetBtn').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        startGame();  // Start the game when the page loads
+    </script>
+</body>
+</html>
